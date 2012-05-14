@@ -1,0 +1,35 @@
+@(form: Form[Entity])
+
+@import helper.FieldConstructor
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) } 
+
+@main("Application Dictionary", "admin") {
+    <div class="page-header"><h1>Create a new entity</h1></div>	
+    
+    @helper.form(action = routes.Entities.create, args = 'class -> "form-horizontal") {
+
+        <fieldset>
+
+	        @helper.inputText(
+	            form("name"),
+	            '_label -> "Entity name"
+	        )
+	
+	        @helper.inputText(
+	            form("tablename"),
+	            '_label -> "Table name"
+	        )
+
+	        @helper.inputText(
+	            form("uid"),
+	            '_label -> "Entity UID"
+	        )
+
+		</fieldset>
+
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="Create this entity"> or <a href="@routes.Entities.list()" class="btn">Cancel</a>
+        </div>
+    }	
+}

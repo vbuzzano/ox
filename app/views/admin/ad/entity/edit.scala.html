@@ -1,0 +1,51 @@
+@(id: Long, entityForm: Form[Entity])
+
+@import helper.FieldConstructor
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) } 
+
+@main("Application Dictionary", "admin") {
+    <div class="page-header">
+        @helper.form(routes.Application.index, 'class -> "float-right") {
+            <input type="submit" value="Delete this entity" class="btn btn-danger">
+        }
+        <h1>Edit entity</h1>
+    </div>	
+
+    @helper.form(action = routes.Entities.create, args = 'class -> "form-horizontal") {
+
+        <fieldset>
+	        @helper.inputText(
+	            entityForm("name"),
+	            '_label -> "Entity name"
+	        )
+
+            <div class="control-group" id="tablename_field">
+                <label class="control-label">Table name</label>
+                <div class="controls">
+                    <span class="input-label">@entityForm("tablename").value</label>
+                </div>
+            </div>
+
+            <div class="control-group" id="uid_field">
+                <label class="control-label">Entity UID</label>
+                <div class="controls">
+                    <span class="input-label">@entityForm("uid").value</label>
+                </div>
+            </div>	
+
+            <div class="control-group" id="id_field">
+                <label class="control-label">Entity Id</label>
+                <div class="controls">
+                    <span class="input-label">@id</label>
+                    <input type="hidden" name="id" value="@id"/>
+                </div>
+            </div>	
+		</fieldset>
+
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="Update this entity"> or <a href="@routes.Entities.list()" class="btn">Cancel</a>
+        </div>
+    }	
+
+}

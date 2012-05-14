@@ -1,0 +1,16 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+GET     /admin/ad                   controllers.AdminAD.index
+GET     /admin/ad/entities          controllers.Entities.list(p:Int ?= 0, s:Int ?= 2, f ?= "")
+POST    /admin/ad/entities/create   controllers.Entities.create
+GET     /admin/ad/entities/create   controllers.Entities.blank
+GET     /admin/ad/entities/edit/:id controllers.Entities.edit(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+

@@ -1,0 +1,95 @@
+@(currentPage: Page[Entity], currentOrderBy: Int, currentFilter: String)(implicit flash: play.api.mvc.Flash)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage: Int, newOrderBy: Option[Int] = None) = @{
+    routes.Entities.list(newPage, newOrderBy.map { orderBy =>
+        if(orderBy == scala.math.abs(currentOrderBy)) -currentOrderBy else orderBy
+    }.getOrElse(currentOrderBy), currentFilter)
+    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(orderBy: Int, title: String) = {
+    <th class="col@orderBy header @if(scala.math.abs(currentOrderBy) == orderBy) @{if(currentOrderBy < 0) "headerSortDown" else "headerSortUp"}">
+        <a href="@link(0, Some(orderBy))">@title</a>
+    </th>
+}
+
+@main("Entities Manager", "admin") {
+   <div class="page-header"><h1>Entities manager</h1></div>	
+
+    @flash.get("success").map { message =>
+        <div class="alert alert-success">
+            <strong>Done!</strong> @message
+        </div>
+    }
+
+    <div id="actions">
+            @helper.form(action=routes.Entities.list(), args = 'class -> "well form-search") {
+                <input type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by entity name, tablename or uid..." class="input-medium search-query">
+                <input type="submit" id="searchsubmit" value="Filter" class="btn btn-primary">
+
+	            <div style="float:right"><a class="btn btn-success" id="add" href="@routes.Entities.blank()">Add a new entity</a></div>
+            }
+    </div>
+
+    @Option(currentPage.items).filterNot(_.isEmpty).map { entities =>
+        
+        <table class="entities table table-striped">
+            <thead>
+                <tr>
+                    @header(3, "Entity name")
+                    @header(4, "Table name")
+                </tr>
+            </thead>
+            <tbody>
+
+                @entities.map { 
+                    case entity => {
+                        <tr>
+                            <td><a href="@routes.Entities.edit(entity.id.get)">@entity.name</a></td>
+                            <td>@entity.tablename</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+        <div id="pagination" class="pagination">
+            <ul>
+                @currentPage.prev.map { page =>
+                    <li class="prev">
+                        <a href="@link(page)">&larr; Previous</a>
+                    </li> 
+                }.getOrElse {
+                    <li class="prev disabled">
+                        <a>&larr; Previous</a>
+                    </li>
+                }
+                <li class="current">
+                    <a>Displaying @(currentPage.offset + 1) to @(currentPage.offset + entities.size) of @currentPage.total</a>
+                </li>
+                @currentPage.next.map { page =>
+                    <li class="next">
+                        <a href="@link(page)">Next &rarr;</a>
+                    </li> 
+                }.getOrElse {
+                    <li class="next disabled">
+                        <a>Next &rarr;</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+    }.getOrElse {
+        
+        <div class="well">
+            <em>Nothing to display</em>
+        </div>
+        
+    }
+}
