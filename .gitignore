@@ -15,4 +15,5 @@ test-result
 eclipse
 server.pid
 target
-
+project/project
+project/target
